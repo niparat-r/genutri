@@ -1,25 +1,29 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { AiHealthAnalysis } from "../types";
 
+const pickFirstKey = (values: Array<string | undefined>) => {
+  return values.find((value) => typeof value === 'string' && value.trim().length > 0);
+};
+
 const resolveApiKey = () => {
   // Prefer Vite-exposed browser variables
   const clientEnvKey = typeof import.meta !== 'undefined'
-    ? (
-        import.meta.env.VITE_GEMINI_API_KEY ||
-        import.meta.env.VITE_API_KEY ||
-        import.meta.env.GEMINI_API_KEY ||
-        import.meta.env.API_KEY
-      )
+    ? pickFirstKey([
+        import.meta.env.VITE_GEMINI_API_KEY,
+        import.meta.env.VITE_API_KEY,
+        import.meta.env.GEMINI_API_KEY,
+        import.meta.env.API_KEY,
+      ])
     : undefined;
 
   // Fallback for Node environments (e.g., local tooling/tests)
   const nodeEnvKey = typeof process !== 'undefined'
-    ? (
-        process.env?.VITE_GEMINI_API_KEY ||
-        process.env?.VITE_API_KEY ||
-        process.env?.GEMINI_API_KEY ||
-        process.env?.API_KEY
-      )
+    ? pickFirstKey([
+        process.env?.VITE_GEMINI_API_KEY,
+        process.env?.VITE_API_KEY,
+        process.env?.GEMINI_API_KEY,
+        process.env?.API_KEY,
+      ])
     : undefined;
 
   return clientEnvKey || nodeEnvKey || null;
