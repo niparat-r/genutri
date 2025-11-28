@@ -1,0 +1,5 @@
+{
+  "name": "Wheel of Meals",
+  "description": "A fun and interactive food decision helper that spins a wheel to select a meal, providing nutritional insights and health tips using AI.",
+  "requestFramePermissions": []
+}
