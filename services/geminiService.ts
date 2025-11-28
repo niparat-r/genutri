@@ -1,8 +1,18 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { AiHealthAnalysis } from "../types";
 
+const resolveApiKey = () => {
+  // Prefer Vite-style environment variable when running in the browser
+  const clientEnvKey = typeof import.meta !== 'undefined' ? import.meta.env.VITE_API_KEY : undefined;
+
+  // Fallback for Node environments (e.g., local tooling/tests)
+  const nodeEnvKey = typeof process !== 'undefined' ? process.env?.API_KEY : undefined;
+
+  return clientEnvKey || nodeEnvKey || null;
+};
+
 const createClient = () => {
-  const apiKey = process.env.API_KEY;
+  const apiKey = resolveApiKey();
   if (!apiKey) return null;
   return new GoogleGenAI({ apiKey });
 };
@@ -40,10 +50,10 @@ export const getHealthAnalysis = async (menuName: string): Promise<AiHealthAnaly
       },
     });
 
-    const jsonText = response.text;
-    if (!jsonText) return null;
-    
-    return JSON.parse(jsonText) as AiHealthAnalysis;
+    const text = typeof response.text === 'function' ? response.text() : response.text;
+    if (!text) return null;
+
+    return JSON.parse(text) as AiHealthAnalysis;
 
   } catch (error) {
     console.error("Gemini API Error:", error);
