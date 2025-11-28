@@ -50,10 +50,10 @@ export const getHealthAnalysis = async (menuName: string): Promise<AiHealthAnaly
       },
     });
 
-    const jsonText = response.text;
-    if (!jsonText) return null;
-    
-    return JSON.parse(jsonText) as AiHealthAnalysis;
+    const text = typeof response.text === 'function' ? response.text() : response.text;
+    if (!text) return null;
+
+    return JSON.parse(text) as AiHealthAnalysis;
 
   } catch (error) {
     console.error("Gemini API Error:", error);
