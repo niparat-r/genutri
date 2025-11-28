@@ -2,7 +2,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { AiHealthAnalysis } from "../types";
 
 const createClient = () => {
-  const apiKey = process.env.API_KEY;
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
   if (!apiKey) return null;
   return new GoogleGenAI({ apiKey });
 };
@@ -40,9 +40,9 @@ export const getHealthAnalysis = async (menuName: string): Promise<AiHealthAnaly
       },
     });
 
-    const jsonText = response.text;
+    const jsonText = response.text();
     if (!jsonText) return null;
-    
+
     return JSON.parse(jsonText) as AiHealthAnalysis;
 
   } catch (error) {
