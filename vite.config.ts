@@ -5,7 +5,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
 
   return {
-    base: '/wheel-of-meals/',   // <<<<< สำคัญมาก ต้องตรงกับชื่อ repo บน GitHub
+    base: '/genutri/',   // <<<<< สำคัญมาก ต้องตรงกับชื่อ repo บน GitHub
     plugins: [react()],
     define: {
       'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
